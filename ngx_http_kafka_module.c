@@ -500,7 +500,7 @@ ngx_int_t ngx_http_kafka_init_worker(ngx_cycle_t *cycle)
     rd_kafka_conf_set_dr_cb(main_conf->rkc, kafka_callback_handler);
 
     if (rd_kafka_conf_set(main_conf->rkc, "security.protocol", "ssl", err, sizeof(err)) != RD_KAFKA_CONF_OK) {
-        return NGX_CONF_ERROR;
+        return 0;
     }
 
     main_conf->rk = rd_kafka_new(RD_KAFKA_PRODUCER, main_conf->rkc, NULL, 0);
