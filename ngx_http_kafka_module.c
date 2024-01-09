@@ -492,11 +492,17 @@ ngx_int_t ngx_http_kafka_init_worker(ngx_cycle_t *cycle)
     ngx_uint_t                   n;
     ngx_str_t                   *broker_list;
     ngx_http_kafka_main_conf_t  *main_conf;
+    char err[512];
 
     main_conf = ngx_http_cycle_get_module_main_conf(cycle,
             ngx_http_kafka_module);
     main_conf->rkc = rd_kafka_conf_new();
     rd_kafka_conf_set_dr_cb(main_conf->rkc, kafka_callback_handler);
+
+    if (rd_kafka_conf_set(main_conf->rkc, "security.protocol", "ssl", err, sizeof(err)) != RD_KAFKA_CONF_OK) {
+        return NGX_CONF_ERROR;
+    }
+
     main_conf->rk = rd_kafka_new(RD_KAFKA_PRODUCER, main_conf->rkc, NULL, 0);
 
     broker_list = main_conf->broker_list->elts;
